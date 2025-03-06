@@ -20,8 +20,8 @@ public class GraphController {
             model.addAttribute("svgContent", svg);
             return "graph";
         } catch (IOException e) {
-            model.addAttribute("errorMessage", "Erreur lors de la génération du graphique.");
-            model.addAttribute("errorDetails", e.getMessage()); // Passe le message d'erreur détaillé
+            model.addAttribute("errorMessage", "Error generating the graph.");
+            model.addAttribute("errorDetails", e.getMessage());
             return "error";
         }
     }

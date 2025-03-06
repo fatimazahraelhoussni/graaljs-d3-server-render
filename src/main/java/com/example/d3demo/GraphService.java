@@ -28,12 +28,12 @@ public class GraphService {
             return result.asString();
 
         } catch (PolyglotException e) {
-            System.err.println("Erreur JavaScript : " + e.getMessage());
-            e.printStackTrace(); // Affiche la trace de la pile pour plus de détails
-            throw new IOException("Erreur lors de l'exécution du code JavaScript : " + e.getMessage(), e);
+            System.err.println("JavaScript Error: " + e.getMessage());
+            e.printStackTrace(); // Prints the stack trace for more details
+            throw new IOException("Error executing JavaScript code: " + e.getMessage(), e);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new IOException("Erreur lors de l'exécution du code JavaScript", e);
+            throw new IOException("Error executing JavaScript code", e);
         }
     }
 }
