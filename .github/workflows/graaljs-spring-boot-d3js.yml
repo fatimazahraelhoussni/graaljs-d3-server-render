@@ -32,7 +32,11 @@ jobs:
           node-version: '23.7.0'
       - name: Install JavaScript dependencies
         run: npm install
-      - name: Build and run 'graaljs-d3js'
+      - name: Build and start 'graaljs-d3js'
         run: |
           ./mvnw --no-transfer-progress package
-          ./mvnw --no-transfer-progress spring-boot:run
+          ./mvnw --no-transfer-progress spring-boot:start
+      - name: Wait for server to start
+        run: sleep 10 # Adjust as needed
+      - name: Stop 'graaljs-d3js'
+        run: ./mvnw --no-transfer-progress spring-boot:stop
