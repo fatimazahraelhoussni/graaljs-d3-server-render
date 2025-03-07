@@ -1,41 +1,43 @@
 var d3 = require('./node_modules/d3/dist/d3.js');
 var linkedom = require('linkedom');
 
-// Simulate the document object with linkedom
 globalThis.document = linkedom.parseHTML('<html><body></body></html>').document;
 
-// Define the dimensions of the graph
-const width = 640;
-const height = 400;
-const marginTop = 20;
-const marginRight = 20;
-const marginBottom = 30;
-const marginLeft = 40;
+const width = 800;
+const height = 500;
+const marginTop = 50;
+const marginRight = 50;
+const marginBottom = 60;
+const marginLeft = 70;
 
-// Define the scale for the X-axis
-const x = d3.scaleUtc()
-    .domain([new Date("2023-01-01"), new Date("2024-01-01")])
-    .range([marginLeft, width - marginRight]);
+const data = [
+    { year: 2019, productCount: 3 },
+    { year: 2020, productCount: 6 },
+    { year: 2021, productCount: 10 },
+    { year: 2022, productCount: 15 },
+    { year: 2023, productCount: 20 }
+];
 
-// Define the scale for the Y-axis
-const y = d3.scaleLinear()
-    .domain([0, 100])
-    .range([height - marginBottom, marginTop]);
+const x = d3.scaleLinear().domain(d3.extent(data, d => d.year)).range([marginLeft, width - marginRight]);
+const y = d3.scaleLinear().domain([0, d3.max(data, d => d.productCount) + 5]).range([height - marginBottom, marginTop]);
 
-// Create the SVG container
-const svg = d3.create("svg")
-    .attr("width", width)
-    .attr("height", height);
+const line = d3.line().x(d => x(d.year)).y(d => y(d.productCount));
 
-// Add the X-axis
-svg.append("g")
-    .attr("transform", `translate(0,${height - marginBottom})`)
-    .call(d3.axisBottom(x));
+const svg = d3.create("svg").attr("width", width).attr("height", height).style("background-color", "#f0f8ff");
 
-// Add the Y-axis
-svg.append("g")
-    .attr("transform", `translate(${marginLeft},0)`)
-    .call(d3.axisLeft(y));
+// Gradient for the line
+svg.append("defs").append("linearGradient").attr("id", "line-gradient").attr("gradientUnits", "userSpaceOnUse").attr("x1", 0).attr("y1", y(3)).attr("x2", 0).attr("y2", y(20)).selectAll("stop").data([
+    { offset: "0%", color: "steelblue" },
+    { offset: "100%", color: "blue" }
+]).enter().append("stop").attr("offset", d => d.offset).attr("stop-color", d => d.color);
 
-// Return the SVG code as a string
+svg.append("g").attr("transform", `translate(0,${height - marginBottom})`).call(d3.axisBottom(x).tickFormat(d3.format("d")));
+svg.append("g").attr("transform", `translate(${marginLeft},0)`).call(d3.axisLeft(y));
+
+svg.append("path").datum(data).attr("fill", "none").attr("stroke", "url(#line-gradient)").attr("stroke-width", 3).attr("d", line);
+
+svg.append("text").attr("transform", `translate(${width / 2}, ${height - marginBottom + 40})`).style("text-anchor", "middle").text("Year").style("fill", "#333");
+svg.append("text").attr("transform", `translate(${marginLeft / 2}, ${height / 2}) rotate(-90)`).style("text-anchor", "middle").text("Product Count").style("fill", "#333");
+svg.append("text").attr("x", (width / 2)).attr("y", (marginTop / 2)).attr("text-anchor", "middle").style("font-size", "16px").style("font-weight", "bold").text("GraalVM Adoption in Oracle Products");
+
 module.exports = svg.node().outerHTML;

@@ -2,6 +2,39 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>SVG Graph</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        div[th\:utext] {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+
+        svg {
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
 </head>
 <body>
 <h1>Generated Graph</h1>
