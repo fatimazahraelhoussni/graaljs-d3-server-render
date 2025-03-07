@@ -1,1 +1,38 @@
-
+name: Test GraalJS D3.js
+on:
+  push:
+    paths:
+      - 'src/**'
+      - 'pom.xml'
+      - '.github/workflows/graaljs-spring-boot-d3js.yml'
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'pom.xml'
+      - '.github/workflows/graaljs-spring-boot-d3js.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  run:
+    name: 'graaljs-d3js'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '21.0.6'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          cache: 'maven'
+      - name: Install Node.js and npm
+        uses: actions/setup-node@v3
+        with:
+          node-version: '23.7.0'
+      - name: Install JavaScript dependencies
+        run: npm install
+      - name: Build and run 'graaljs-d3js'
+        run: |
+          ./mvnw --no-transfer-progress package
+          ./mvnw --no-transfer-progress spring-boot:run
